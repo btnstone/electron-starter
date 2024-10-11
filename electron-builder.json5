@@ -25,7 +25,8 @@
       {
         "target": "nsis",
         "arch": [
-          "x64"
+          "x64",
+          "arm64"
         ]
       }
     ],
@@ -42,7 +43,7 @@
       "deb"
     ],
     "maintainer": "dascom.com",
-    "artifactName": "${productName}-${os}-${arch}-${version}.${ext}",
+    "artifactName": "${productName}-${os}-${arch}-v${version}.${ext}",
     "icon": "./public/512x512.png"
   }
 }
