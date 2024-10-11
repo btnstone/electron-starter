@@ -39,6 +39,7 @@ jobs:
       - name: Build the Electron app
         env:
           USE_SYSTEM_FPM: "true"
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn run build:linux
 
       - name: Upload Specific Artifacts
