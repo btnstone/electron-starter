@@ -29,8 +29,8 @@
     "start": "electron-vite preview",
     "postinstall": "electron-builder install-app-deps",
     "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "electron-vite build && electron-builder --mac",
+    "build:win": "vite build && electron-builder --win",
+    "build:mac": "vite build && electron-builder --mac",
     "build:linux": "vite build && electron-builder --linux",
     "up": "taze major -I"
   },
