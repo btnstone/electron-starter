@@ -36,18 +36,22 @@ jobs:
           sudo apt install ruby -y
           sudo gem install fpm
 
+      - name: Get Version Number
+        id: get_version
+        run: echo "VERSION=$(node -p "require('./package.json').version")" >> $GITHUB_ENV
+
       - name: Build the Electron app
         env:
           USE_SYSTEM_FPM: "true"
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: yarn run build:linux
+        run: yarn run build:linux -- --arch=${{ matrix.architecture }}
 
       - name: Upload Specific Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: build-artifacts-${{ matrix.architecture }}
           path: |
-            ./release/*/*.deb
+            ./release/${{ env.VERSION }}/*.deb
           if-no-files-found: error  # 如果未找到文件，则抛出错误
 
   release:
@@ -72,7 +76,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ github.ref_name }} \
+          gh release upload ${{ github.ref_name }} \
             artifacts/${{ matrix.architecture }}/*.deb \
-            --generate-notes \
-            --title "Release ${{ github.ref_name }} for ${{ matrix.architecture }}"
+            --clobber
