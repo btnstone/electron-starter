@@ -42,7 +42,7 @@
       "deb"
     ],
     "maintainer": "dascom.com",
-    "artifactName": "${productName}-Linux-${version}.${ext}",
+    "artifactName": "${productName}-${os}-${arch}-${version}.${ext}",
     "icon": "./public/512x512.png"
   }
 }

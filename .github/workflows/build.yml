@@ -51,7 +51,7 @@ jobs:
         with:
           name: build-artifacts-${{ matrix.architecture }}
           path: |
-            ./release/${{ env.VERSION }}/*.deb
+            ./release/${{ env.VERSION }}/*-${{ matrix.architecture }}-*.deb
           if-no-files-found: error  # 如果未找到文件，则抛出错误
 
       - name: Create Release
@@ -86,5 +86,5 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release upload ${{ github.ref_name }} \
-            artifacts/${{ matrix.architecture }}/*.deb \
+            artifacts/${{ matrix.architecture }}/*-${{ matrix.architecture }}-*.deb \
             --clobber
