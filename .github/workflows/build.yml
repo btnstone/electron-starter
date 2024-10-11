@@ -54,6 +54,15 @@ jobs:
             ./release/${{ env.VERSION }}/*.deb
           if-no-files-found: error  # 如果未找到文件，则抛出错误
 
+      - name: Create Release
+        if: ${{ matrix.architecture == 'x64' }}  # 只在一个架构下创建发布
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create ${{ github.ref_name }} \
+            --notes "Release ${{ github.ref_name }}" \
+            --title "Release ${{ github.ref_name }}"
+
   release:
     needs: build
     runs-on: ubuntu-latest
@@ -72,7 +81,7 @@ jobs:
           name: build-artifacts-${{ matrix.architecture }}
           path: artifacts/${{ matrix.architecture }}
 
-      - name: Create Release
+      - name: Upload Assets to Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
