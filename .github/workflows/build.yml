@@ -47,8 +47,7 @@ jobs:
         with:
           name: build-artifacts-${{ matrix.architecture }}
           path: |
-            ./dist/*
-            !**/linux-unpacked/**
+            ./release/*/*.deb
           if-no-files-found: error  # 如果未找到文件，则抛出错误
 
   release:
@@ -56,24 +55,24 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    strategy:
+      matrix:
+        architecture: [ x64, arm64 ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Download all artifacts
+      - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          path: dist  # 将所有制品下载到 dist 目录
-
-      - name: Compress artifacts
-        run: |
-          cd dist
-          zip -r ../release-${{ github.ref_name }}.zip .
+          name: build-artifacts-${{ matrix.architecture }}
+          path: artifacts/${{ matrix.architecture }}
 
       - name: Create Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release create ${{ github.ref_name }} release-${{ github.ref_name }}.zip \
+          gh release create ${{ github.ref_name }} \
+            artifacts/${{ matrix.architecture }}/*.deb \
             --generate-notes \
-            --title "Release ${{ github.ref_name }}"
+            --title "Release ${{ github.ref_name }} for ${{ matrix.architecture }}"
